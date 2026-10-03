@@ -26,3 +26,125 @@ select,
 textarea {
   font-family: inherit;
 }
+
+/* Org chart — connected-boxes diagram (pure CSS, no SVG/canvas). Each parent
+   <li> draws a horizontal bar across its children via ::before/::after, and
+   each child <ul> drops a vertical line from that bar — ported from the
+   offline HTML app's org-chart-diagram styles. */
+.org-chart-scroll {
+  overflow-x: auto;
+  padding: 10px 4px 20px;
+}
+.org-chart-diagram,
+.org-chart-diagram ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+}
+.org-chart-diagram {
+  padding-top: 4px;
+}
+.org-chart-diagram li {
+  position: relative;
+  padding: 28px 10px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.org-chart-diagram li::before,
+.org-chart-diagram li::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 50%;
+  border-top: 2px solid var(--line);
+  width: 50%;
+  height: 20px;
+}
+.org-chart-diagram li::after {
+  right: auto;
+  left: 50%;
+  border-left: 2px solid var(--line);
+}
+.org-chart-diagram li:first-child::before {
+  border-top: none;
+}
+.org-chart-diagram li:last-child::after {
+  border-top: none;
+}
+.org-chart-diagram li:not(:only-child):first-child::after {
+  border-radius: 0 0 0 6px;
+}
+.org-chart-diagram li:not(:only-child):last-child::before {
+  border-radius: 0 0 6px 0;
+}
+.org-chart-diagram > li {
+  padding-top: 0;
+}
+.org-chart-diagram > li::before,
+.org-chart-diagram > li::after {
+  display: none;
+}
+.org-chart-diagram ul {
+  position: relative;
+  padding-top: 20px;
+}
+.org-chart-diagram ul::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  border-left: 2px solid var(--line);
+  width: 0;
+  height: 20px;
+}
+.org-chart-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px 12px;
+  min-width: 104px;
+  max-width: 128px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(10, 42, 94, 0.06);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  text-decoration: none;
+  color: inherit;
+}
+.org-chart-node:hover {
+  box-shadow: 0 4px 14px rgba(10, 42, 94, 0.14);
+}
+.org-chart-node:active {
+  transform: scale(0.96);
+}
+.org-chart-node .org-chart-name {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--text);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 108px;
+}
+.org-chart-node .org-chart-role {
+  font-size: 9px;
+  font-weight: 800;
+  color: var(--navy);
+  background: var(--bg);
+  padding: 1px 8px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+.org-chart-node .org-chart-count {
+  font-size: 9px;
+  color: var(--muted);
+  font-weight: 700;
+  white-space: nowrap;
+}

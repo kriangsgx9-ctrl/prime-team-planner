@@ -1,6 +1,6 @@
 import "server-only";
 import { prisma } from "@/lib/prisma";
-import { buildIncomeContext, type ActualInput, type IncomeContext, type MemberLite, type OrgRole, type SettingsData } from "@/lib/domain/income";
+import { buildIncomeContext, type ActualInput, type GoalInput, type IncomeContext, type MemberLite, type OrgRole, type SettingsData } from "@/lib/domain/income";
 import { defaultSettingsData } from "@/lib/domain/default-settings";
 
 export async function getSettingsData(): Promise<SettingsData> {
@@ -8,17 +8,21 @@ export async function getSettingsData(): Promise<SettingsData> {
   return (row?.dataJson as unknown as SettingsData) ?? defaultSettingsData;
 }
 
-// Loads two calendar years (the target year + the previous one) of actuals —
-// enough to cover the rolling 12-month FYC lookback and the RA payout-window
-// check, which can both reach back across a year boundary (e.g. computing
-// January needs December of the prior year).
-export async function loadIncomeContext(year: number): Promise<IncomeContext> {
-  const [members, actuals, settings] = await Promise.all([
+// Loads `yearsBack + 1` calendar years ending at `year` — enough to cover the
+// rolling 12-month FYC lookback and the RA payout-window check (which can
+// reach back across a year boundary), and widened by callers like Trends'
+// "last 4 years" view that need more history in one context.
+export async function loadIncomeContext(year: number, yearsBack = 1): Promise<IncomeContext> {
+  const yearList = Array.from({ length: yearsBack + 1 }, (_, i) => year - yearsBack + i);
+  const [members, actuals, goals, settings] = await Promise.all([
     prisma.member.findMany({
       select: { id: true, role: true, parentId: true, recruiterId: true, joinMonth: true, joinYear: true },
     }),
     prisma.actual.findMany({
-      where: { year: { in: [year - 1, year] } },
+      where: { year: { in: yearList } },
+    }),
+    prisma.goal.findMany({
+      where: { year: { in: yearList } },
     }),
     getSettingsData(),
   ]);
@@ -43,10 +47,20 @@ export async function loadIncomeContext(year: number): Promise<IncomeContext> {
     priorYearNBC: a.priorYearNBC,
     persistency: a.persistency,
     active: a.active,
+    agentStatus: a.agentStatus,
     personalUnitNBC: a.personalUnitNBC ?? 0,
     newALPromotions: a.newALPromotions,
     newVPPromotions: a.newVPPromotions,
   }));
 
-  return buildIncomeContext(memberLites, actualInputs, settings);
+  const goalInputs: Array<{ memberId: string; year: number; month: number } & GoalInput> = goals.map((g) => ({
+    memberId: g.memberId,
+    year: g.year,
+    month: g.month,
+    targetFYP: g.targetFYP,
+    targetNBC: g.targetNBC,
+    targetFYC: g.targetFYC,
+  }));
+
+  return buildIncomeContext(memberLites, actualInputs, settings, goalInputs);
 }

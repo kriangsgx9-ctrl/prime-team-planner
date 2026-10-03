@@ -77,6 +77,7 @@ export interface ActualInput {
   priorYearNBC: number;
   persistency: number;
   active: boolean;
+  agentStatus: string | null;
   personalUnitNBC: number;
   newALPromotions: number;
   newVPPromotions: number;
@@ -90,19 +91,34 @@ const DEFAULT_ACTUAL: ActualInput = {
   priorYearNBC: 0,
   persistency: 1,
   active: true,
+  agentStatus: null,
   personalUnitNBC: 0,
   newALPromotions: 0,
   newVPPromotions: 0,
 };
 
+export interface GoalInput {
+  targetFYP: number;
+  targetNBC: number;
+  targetFYC: number;
+}
+
+const DEFAULT_GOAL: GoalInput = { targetFYP: 0, targetNBC: 0, targetFYC: 0 };
+
 export interface IncomeContext {
   membersById: Map<string, MemberLite>;
   childrenByParent: Map<string, string[]>;
   actualsByKey: Map<string, ActualInput>;
+  goalsByKey: Map<string, GoalInput>;
   settings: SettingsData;
 }
 
-export function buildIncomeContext(members: MemberLite[], actuals: Array<{ memberId: string; year: number; month: number } & ActualInput>, settings: SettingsData): IncomeContext {
+export function buildIncomeContext(
+  members: MemberLite[],
+  actuals: Array<{ memberId: string; year: number; month: number } & ActualInput>,
+  settings: SettingsData,
+  goals: Array<{ memberId: string; year: number; month: number } & GoalInput> = [],
+): IncomeContext {
   const membersById = new Map(members.map((m) => [m.id, m]));
   const childrenByParent = new Map<string, string[]>();
   for (const m of members) {
@@ -115,7 +131,11 @@ export function buildIncomeContext(members: MemberLite[], actuals: Array<{ membe
   for (const a of actuals) {
     actualsByKey.set(pKey(a.memberId, a.year, a.month), a);
   }
-  return { membersById, childrenByParent, actualsByKey, settings };
+  const goalsByKey = new Map<string, GoalInput>();
+  for (const g of goals) {
+    goalsByKey.set(pKey(g.memberId, g.year, g.month), g);
+  }
+  return { membersById, childrenByParent, actualsByKey, goalsByKey, settings };
 }
 
 export function pKey(memberId: string, y: number, m: number) {
@@ -124,6 +144,10 @@ export function pKey(memberId: string, y: number, m: number) {
 
 export function getActual(ctx: IncomeContext, memberId: string, y: number, m: number): ActualInput {
   return ctx.actualsByKey.get(pKey(memberId, y, m)) ?? DEFAULT_ACTUAL;
+}
+
+export function getGoal(ctx: IncomeContext, memberId: string, y: number, m: number): GoalInput {
+  return ctx.goalsByKey.get(pKey(memberId, y, m)) ?? DEFAULT_GOAL;
 }
 
 export function children(ctx: IncomeContext, id: string): MemberLite[] {
@@ -229,6 +253,33 @@ export function computeAnnualNBC(ctx: IncomeContext, memberId: string, y: number
   return sum;
 }
 
+export function computeAnnualFYP(ctx: IncomeContext, memberId: string, y: number, m: number, liveOverride?: number): number {
+  let sum = 0;
+  for (let mm = 1; mm <= 12; mm++) {
+    sum += mm === m && liveOverride !== undefined ? liveOverride : getActual(ctx, memberId, y, mm).actualFYP || 0;
+  }
+  return sum;
+}
+
+// Sums a field over a rolling 2-month cycle — cycles repeat every 2 months
+// starting from `startMonth` (e.g. startMonth=3 gives cycles Mar-Apr, May-Jun,
+// ... wrapping Nov-Dec then Jan-Feb of the NEXT year). Handles the cycle
+// crossing a calendar year boundary correctly.
+export function compute2MoSum(ctx: IncomeContext, memberId: string, y: number, m: number, field: "actualFYP" | "actualFYC" | "actualNBC", startMonth = 1): number {
+  const curAbs = y * 12 + (m - 1);
+  const startAbs0 = startMonth - 1;
+  const parity = (((curAbs - startAbs0) % 2) + 2) % 2;
+  const binStartAbs = curAbs - parity;
+  let sum = 0;
+  for (let i = 0; i < 2; i++) {
+    const abs = binStartAbs + i;
+    const yy = Math.floor(abs / 12);
+    const mm = (abs % 12) + 1;
+    sum += getActual(ctx, memberId, yy, mm)[field] || 0;
+  }
+  return sum;
+}
+
 export function computeFYC12mo(ctx: IncomeContext, memberId: string, y: number, m: number, liveOverride?: number): number {
   let sum = 0;
   for (let i = 0; i < 12; i++) {
@@ -266,6 +317,50 @@ export function allDescendantsProductionNBC(ctx: IncomeContext, memberId: string
 export function allDescendantsProductionRYC(ctx: IncomeContext, memberId: string, y: number, m: number): number {
   let sum = 0;
   for (const d of descendants(ctx, memberId)) sum += getActual(ctx, d.id, y, m).actualRYC || 0;
+  return sum;
+}
+
+export function allDescendantsActualFYP(ctx: IncomeContext, memberId: string, y: number, m: number): number {
+  let sum = 0;
+  for (const d of descendants(ctx, memberId)) sum += getActual(ctx, d.id, y, m).actualFYP || 0;
+  return sum;
+}
+
+export function allDescendantsTargetFYP(ctx: IncomeContext, memberId: string, y: number, m: number): number {
+  let sum = 0;
+  for (const d of descendants(ctx, memberId)) sum += getGoal(ctx, d.id, y, m).targetFYP || 0;
+  return sum;
+}
+
+export function allDescendantsTargetNBC(ctx: IncomeContext, memberId: string, y: number, m: number): number {
+  let sum = 0;
+  for (const d of descendants(ctx, memberId)) sum += getGoal(ctx, d.id, y, m).targetNBC || 0;
+  return sum;
+}
+
+// "Team-inclusive" = this person's own number + their entire downline (all
+// levels). For a leaf AG with no descendants this is identical to their
+// personal number, so these are safe to use for any role.
+export function teamInclusiveTargetFYP(ctx: IncomeContext, memberId: string, y: number, m: number): number {
+  return (getGoal(ctx, memberId, y, m).targetFYP || 0) + allDescendantsTargetFYP(ctx, memberId, y, m);
+}
+export function teamInclusiveActualFYP(ctx: IncomeContext, memberId: string, y: number, m: number): number {
+  return (getActual(ctx, memberId, y, m).actualFYP || 0) + allDescendantsActualFYP(ctx, memberId, y, m);
+}
+export function teamInclusiveTargetNBC(ctx: IncomeContext, memberId: string, y: number, m: number): number {
+  return (getGoal(ctx, memberId, y, m).targetNBC || 0) + allDescendantsTargetNBC(ctx, memberId, y, m);
+}
+export function teamInclusiveActualNBC(ctx: IncomeContext, memberId: string, y: number, m: number): number {
+  return (getActual(ctx, memberId, y, m).actualNBC || 0) + allDescendantsProductionNBC(ctx, memberId, y, m);
+}
+export function teamInclusiveActualFYC(ctx: IncomeContext, memberId: string, y: number, m: number): number {
+  let sum = getActual(ctx, memberId, y, m).actualFYC || 0;
+  for (const d of descendants(ctx, memberId)) sum += getActual(ctx, d.id, y, m).actualFYC || 0;
+  return sum;
+}
+export function teamInclusiveTargetFYC(ctx: IncomeContext, memberId: string, y: number, m: number): number {
+  let sum = getGoal(ctx, memberId, y, m).targetFYC || 0;
+  for (const d of descendants(ctx, memberId)) sum += getGoal(ctx, d.id, y, m).targetFYC || 0;
   return sum;
 }
 

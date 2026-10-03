@@ -9,6 +9,8 @@ const NAV = [
   { href: "/actuals", label: "บันทึกผลการดำเนินงาน" },
   { href: "/income", label: "ประมาณการรายได้" },
   { href: "/alerts", label: "การแจ้งเตือนความเสี่ยง" },
+  { href: "/team-report", label: "รายงานสรุปทีม" },
+  { href: "/trends", label: "แนวโน้มผลงาน" },
   { href: "/settings", label: "ตั้งค่าระบบ", adminOnly: true },
 ];
 

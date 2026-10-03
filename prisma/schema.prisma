@@ -48,6 +48,7 @@ model Member {
 
   goals         Goal[]
   actuals       Actual[]
+  evaluations   Evaluation[]
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 }
@@ -94,4 +95,36 @@ model Actual {
 model Settings {
   id       Int  @id @default(1)
   dataJson Json
+}
+
+// Quarterly performance review filled in by the direct leader. `scores` keys
+// differ between AG and leader roles (see lib/domain/evaluations.ts), so it's
+// stored as a JSON blob keyed by category rather than fixed columns.
+model Evaluation {
+  id              String    @id @default(cuid())
+  memberId        String
+  member          Member    @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  year            Int
+  quarter         Int
+  scores          Json
+  strengths       String?
+  improvements    String?
+  developmentPlan String?
+  followUpStatus  String?
+  evaluatedAt     DateTime?
+
+  @@unique([memberId, year, quarter])
+}
+
+// Admin-defined award/qualification, auto-checked against actual performance
+// each period (e.g. "Top Producer this month: NBC >= 50,000").
+model Qualification {
+  id               String @id @default(cuid())
+  icon             String
+  name             String
+  scope            String // ALL | AG | AL | VP
+  metric           String
+  threshold        Float
+  periodStartMonth Int?
+  createdAt        DateTime @default(now())
 }
