@@ -11,6 +11,8 @@ const NAV = [
   { href: "/alerts", label: "การแจ้งเตือนความเสี่ยง" },
   { href: "/team-report", label: "รายงานสรุปทีม" },
   { href: "/trends", label: "แนวโน้มผลงาน" },
+  { href: "/qualtrack", label: "ติดตามคุณวุฒิ" },
+  { href: "/eval", label: "ประเมินผลการปฏิบัติงาน" },
   { href: "/settings", label: "ตั้งค่าระบบ", adminOnly: true },
 ];
 
