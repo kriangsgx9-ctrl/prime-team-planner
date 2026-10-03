@@ -13,6 +13,7 @@ const NAV = [
   { href: "/trends", label: "แนวโน้มผลงาน" },
   { href: "/qualtrack", label: "ติดตามคุณวุฒิ" },
   { href: "/eval", label: "ประเมินผลการปฏิบัติงาน" },
+  { href: "/export", label: "นำเข้า-ส่งออกข้อมูล" },
   { href: "/settings", label: "ตั้งค่าระบบ", adminOnly: true },
 ];
 
