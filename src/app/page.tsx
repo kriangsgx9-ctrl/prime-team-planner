@@ -3,5 +3,5 @@ import { getSessionMember } from "@/lib/auth/session";
 
 export default async function RootPage() {
   const member = await getSessionMember();
-  redirect(member ? "/team" : "/login");
+  redirect(member ? "/dashboard" : "/login");
 }

@@ -60,5 +60,5 @@ export async function setupAdminAction(_prev: FormState, form: FormData): Promis
   });
 
   await startSession(admin.id);
-  redirect("/team");
+  redirect("/dashboard");
 }

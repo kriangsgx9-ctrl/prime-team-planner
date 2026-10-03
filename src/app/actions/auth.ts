@@ -23,7 +23,7 @@ export async function loginAction(_prev: FormState, form: FormData): Promise<For
     return { error: "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง" };
   }
   await startSession(member.id);
-  redirect("/team");
+  redirect("/dashboard");
 }
 
 export async function logoutAction() {

@@ -3,10 +3,12 @@ import { requireUser } from "@/lib/auth/session";
 import { logoutAction } from "@/app/actions/auth";
 
 const NAV = [
+  { href: "/dashboard", label: "ภาพรวม" },
   { href: "/team", label: "จัดการทีม" },
   { href: "/goals", label: "กำหนดเป้าหมาย" },
   { href: "/actuals", label: "บันทึกผลการดำเนินงาน" },
   { href: "/income", label: "ประมาณการรายได้" },
+  { href: "/alerts", label: "การแจ้งเตือนความเสี่ยง" },
   { href: "/settings", label: "ตั้งค่าระบบ", adminOnly: true },
 ];
 

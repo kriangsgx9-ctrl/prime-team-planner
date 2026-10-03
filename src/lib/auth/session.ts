@@ -64,7 +64,7 @@ export async function requireUser(): Promise<SessionMember> {
 
 export async function requireAdmin(): Promise<SessionMember> {
   const member = await requireUser();
-  if (!member.isAdmin) redirect("/team?reason=admin-only");
+  if (!member.isAdmin) redirect("/dashboard?reason=admin-only");
   return member;
 }
 

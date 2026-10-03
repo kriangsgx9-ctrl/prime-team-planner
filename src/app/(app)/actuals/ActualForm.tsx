@@ -10,6 +10,7 @@ interface ActualData {
   actualFYC: number;
   actualRYC: number;
   priorYearNBC: number;
+  personalUnitNBC: number | null;
   persistency: number;
   agentStatus: string | null;
   newALPromotions: number;
@@ -57,14 +58,19 @@ export function ActualForm({ memberId, year, month, actual, isAgOrAgentRole }: {
         </Field>
       )}
       {!isAgOrAgentRole && (
-        <div className="grid gap-3 sm:grid-cols-2">
-          <Field label="จำนวน AL ใหม่ที่ปั้นขึ้นเดือนนี้">
-            <input name="newALPromotions" type="number" min={0} defaultValue={actual?.newALPromotions ?? 0} className={inputClass} />
+        <>
+          <Field label="NBC หน่วยตรง (เดือนนี้)" hint="ผลงานส่วนตัว ไม่รวมทีม — ใช้ตรวจสอบเกณฑ์ ODI">
+            <input name="personalUnitNBC" type="number" min={0} step="0.01" defaultValue={actual?.personalUnitNBC ?? 0} className={inputClass} />
           </Field>
-          <Field label="จำนวน VP ใหม่ที่ปั้นขึ้นเดือนนี้">
-            <input name="newVPPromotions" type="number" min={0} defaultValue={actual?.newVPPromotions ?? 0} className={inputClass} />
-          </Field>
-        </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <Field label="จำนวน AL ใหม่ที่ปั้นขึ้นเดือนนี้">
+              <input name="newALPromotions" type="number" min={0} defaultValue={actual?.newALPromotions ?? 0} className={inputClass} />
+            </Field>
+            <Field label="จำนวน VP ใหม่ที่ปั้นขึ้นเดือนนี้">
+              <input name="newVPPromotions" type="number" min={0} defaultValue={actual?.newVPPromotions ?? 0} className={inputClass} />
+            </Field>
+          </div>
+        </>
       )}
       <FormError error={state?.error} />
       <PrimeButton type="submit" disabled={pending}>

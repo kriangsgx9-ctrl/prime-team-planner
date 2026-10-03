@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: "เข้าสู่ระบบ �
 export default async function LoginPage({ searchParams }: { searchParams: Promise<{ reason?: string }> }) {
   const { reason } = await searchParams;
   const member = await getSessionMember();
-  if (member) redirect("/team");
+  if (member) redirect("/dashboard");
 
   return (
     <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center px-4 py-10">

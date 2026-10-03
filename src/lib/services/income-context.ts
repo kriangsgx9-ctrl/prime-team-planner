@@ -43,6 +43,7 @@ export async function loadIncomeContext(year: number): Promise<IncomeContext> {
     priorYearNBC: a.priorYearNBC,
     persistency: a.persistency,
     active: a.active,
+    personalUnitNBC: a.personalUnitNBC ?? 0,
     newALPromotions: a.newALPromotions,
     newVPPromotions: a.newVPPromotions,
   }));

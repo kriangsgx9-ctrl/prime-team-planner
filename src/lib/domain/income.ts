@@ -77,6 +77,7 @@ export interface ActualInput {
   priorYearNBC: number;
   persistency: number;
   active: boolean;
+  personalUnitNBC: number;
   newALPromotions: number;
   newVPPromotions: number;
 }
@@ -89,6 +90,7 @@ const DEFAULT_ACTUAL: ActualInput = {
   priorYearNBC: 0,
   persistency: 1,
   active: true,
+  personalUnitNBC: 0,
   newALPromotions: 0,
   newVPPromotions: 0,
 };
@@ -139,6 +141,18 @@ export function descendants(ctx: IncomeContext, id: string): MemberLite[] {
 
 export function allAGUnder(ctx: IncomeContext, id: string): MemberLite[] {
   return descendants(ctx, id).filter((u) => u.role === "AG");
+}
+
+export function allALUnder(ctx: IncomeContext, id: string): MemberLite[] {
+  return descendants(ctx, id).filter((u) => AL_ROLES.includes(u.role as (typeof AL_ROLES)[number]));
+}
+
+export function hasActualData(ctx: IncomeContext, memberId: string, y: number, m: number): boolean {
+  return ctx.actualsByKey.has(pKey(memberId, y, m));
+}
+
+export function getRetentionCriteria(ctx: IncomeContext, role: OrgRole): RetentionCriterion {
+  return ctx.settings.retentionCriteria[role] ?? { fyc: 0, agents: 0, persistency: 0.75 };
 }
 
 export function tierRateByMin(value: number, tiers: Tier[]): number {
