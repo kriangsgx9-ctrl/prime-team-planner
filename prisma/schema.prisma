@@ -1,0 +1,97 @@
+// PRIME TEAM PLANNER — Prisma schema
+// Phase 1: auth + team hierarchy + goals/actuals + income calculator + admin-gated settings.
+// Evaluation / Qualification tracking / reports are deferred to a later phase.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum OrgRole {
+  AG
+  UM
+  AM
+  DM
+  SDM
+  VP
+  AGP
+}
+
+// One table for both "org roster" and "login account": most members have no
+// login at all (pure data, managed by whoever is signed in) — only managers
+// granted access have username/passwordHash set. See lib/auth/session.ts for
+// how isAdmin and the single-session sessionId field are enforced.
+model Member {
+  id            String    @id @default(cuid())
+  name          String
+  role          OrgRole
+  parentId      String?
+  parent        Member?   @relation("ReportsTo", fields: [parentId], references: [id], onDelete: SetNull)
+  reports       Member[]  @relation("ReportsTo")
+  recruiterId   String?
+  recruiter     Member?   @relation("Recruited", fields: [recruiterId], references: [id], onDelete: SetNull)
+  recruited     Member[]  @relation("Recruited")
+  agentCode     String?   @unique
+  joinMonth     Int?
+  joinYear      Int?
+  photo         String?   @db.Text
+
+  username      String?   @unique
+  passwordHash  String?
+  isAdmin       Boolean   @default(false)
+  sessionId     String?
+  sessionSeenAt DateTime?
+  isActive      Boolean   @default(true)
+
+  goals         Goal[]
+  actuals       Actual[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Goal {
+  id         String    @id @default(cuid())
+  memberId   String
+  member     Member    @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  year       Int
+  month      Int
+  targetFYP  Float     @default(0)
+  targetNBC  Float     @default(0)
+  targetFYC  Float     @default(0)
+  status     String?
+  approvedAt DateTime?
+
+  @@unique([memberId, year, month])
+}
+
+model Actual {
+  id              String   @id @default(cuid())
+  memberId        String
+  member          Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  year            Int
+  month           Int
+  actualFYP       Float    @default(0)
+  actualNBC       Float    @default(0)
+  actualFYC       Float    @default(0)
+  actualRYC       Float    @default(0)
+  priorYearNBC    Float    @default(0) // AG Renewal Year Bonus lookup — NBC accumulated the prior year
+  persistency     Float    @default(1)
+  active          Boolean  @default(true)
+  agentStatus     String?  // ACTIVE | INACTIVE | TERMINATED
+  personalUnitNBC Float?
+  newALPromotions Int      @default(0)
+  newVPPromotions Int      @default(0)
+
+  @@unique([memberId, year, month])
+}
+
+// Singleton row holding every commission tier table — an admin-edited config
+// blob, not row-queried data, so one JSON column matches its actual usage
+// far better than ~15 normalized tier tables would.
+model Settings {
+  id       Int  @id @default(1)
+  dataJson Json
+}
