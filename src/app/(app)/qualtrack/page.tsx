@@ -4,7 +4,7 @@ import { fmt } from "@/lib/domain/income";
 import { computeQualificationsProgress, qualMetricUnit, QUAL_METRIC_LABEL, QUAL_SCOPE_LABEL, type QualificationDef, type QualMetric, type QualScope } from "@/lib/domain/qualifications";
 import { loadIncomeContext } from "@/lib/services/income-context";
 import { Avatar } from "@/components/ui/Avatar";
-import { Card } from "@/components/ui/primitives";
+import { Card, IconBadge } from "@/components/ui/primitives";
 import { MonthYearPicker } from "@/components/MonthYearPicker";
 import { AddQualificationForm } from "./AddQualificationForm";
 import { DeleteQualButton } from "./DeleteQualButton";
@@ -33,7 +33,10 @@ export default async function QualTrackPage({ searchParams }: { searchParams: Pr
   return (
     <div className="space-y-4">
       <Card>
-        <h1 className="mb-1 text-lg font-extrabold text-[var(--navy)]">ติดตามคุณวุฒิ</h1>
+        <h1 className="mb-1 flex items-center text-lg font-extrabold text-[var(--navy)]">
+          <IconBadge icon="🏆" variant="orange" />
+          ติดตามคุณวุฒิ
+        </h1>
         <p className="mb-3 text-sm text-[var(--muted)]">ดูว่าใครติดคุณวุฒิแล้วบ้าง และใครใกล้ถึงแค่ไหน</p>
         <MonthYearPicker action="/qualtrack" year={year} month={month} />
       </Card>
@@ -125,7 +128,10 @@ export default async function QualTrackPage({ searchParams }: { searchParams: Pr
 
       {me.isAdmin && (
         <Card>
-          <h2 className="mb-3 text-base font-extrabold text-[var(--navy)]">เพิ่มคุณวุฒิ / รางวัลใหม่</h2>
+          <h2 className="mb-3 flex items-center text-base font-extrabold text-[var(--navy)]">
+            <IconBadge icon="➕" variant="green" />
+            เพิ่มคุณวุฒิ / รางวัลใหม่
+          </h2>
           <AddQualificationForm />
         </Card>
       )}

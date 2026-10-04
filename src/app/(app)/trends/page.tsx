@@ -4,7 +4,7 @@ import { ROLE_LABEL, rolesOrder } from "@/lib/domain/org";
 import { AL_ROLES, fmt } from "@/lib/domain/income";
 import { computeStatusComposition, computeTargetAchievementComposition, computeTrendInsights, getMonthsBack, getTrendValue, type TrendField, type TrendScope } from "@/lib/domain/trends";
 import { loadIncomeContext } from "@/lib/services/income-context";
-import { Card } from "@/components/ui/primitives";
+import { Card, IconBadge } from "@/components/ui/primitives";
 import { TrendSparkline } from "@/components/TrendSparkline";
 import { TrendControls } from "./TrendControls";
 import { AchieveMetricPicker } from "./AchieveMetricPicker";
@@ -81,7 +81,10 @@ export default async function TrendsPage({
   return (
     <div className="space-y-4">
       <Card>
-        <h1 className="mb-1 text-lg font-extrabold text-[var(--navy)]">แนวโน้มผลงาน</h1>
+        <h1 className="mb-1 flex items-center text-lg font-extrabold text-[var(--navy)]">
+          <IconBadge icon="📊" variant="soft" />
+          แนวโน้มผลงาน
+        </h1>
         <p className="mb-3 text-sm text-[var(--muted)]">วิเคราะห์ผลงานย้อนหลัง เปรียบเทียบเดือนต่อเดือนและปีต่อปี</p>
         <TrendControls members={sorted} roleLabel={ROLE_LABEL} memberId={member.id} granularity={granularity} scope={scope} metric={metric} />
       </Card>
@@ -105,7 +108,8 @@ export default async function TrendsPage({
       </div>
 
       <Card>
-        <h2 className="mb-2 text-base font-extrabold text-[var(--navy)]">
+        <h2 className="mb-2 flex items-center text-base font-extrabold text-[var(--navy)]">
+          <IconBadge icon="📈" variant="green" />
           แนวโน้ม {METRIC_LABEL[metric]} — {scopeLabel}
         </h2>
         <TrendSparkline values={values} />
@@ -117,7 +121,10 @@ export default async function TrendsPage({
       </Card>
 
       <Card>
-        <h2 className="mb-3 text-base font-extrabold text-[var(--navy)]">สุขภาพทีม ณ ตอนนี้</h2>
+        <h2 className="mb-3 flex items-center text-base font-extrabold text-[var(--navy)]">
+          <IconBadge icon="🩺" variant="soft" />
+          สุขภาพทีม ณ ตอนนี้
+        </h2>
         <div className="mb-4">
           <div className="mb-2 text-center text-sm font-extrabold">สถานะตัวแทน</div>
           <div className="grid grid-cols-3 gap-2 text-center">
@@ -140,7 +147,10 @@ export default async function TrendsPage({
       </Card>
 
       <Card>
-        <h2 className="mb-3 text-base font-extrabold text-[var(--navy)]">ตารางรายละเอียด</h2>
+        <h2 className="mb-3 flex items-center text-base font-extrabold text-[var(--navy)]">
+          <IconBadge icon="🗂️" variant="soft" />
+          ตารางรายละเอียด
+        </h2>
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-[var(--line)] text-left text-xs font-bold text-[var(--muted)]">

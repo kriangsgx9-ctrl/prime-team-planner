@@ -6,7 +6,7 @@ import { AL_ROLES, children, descendants, fmt, getActual, getGoal, teamInclusive
 import { computeAlerts } from "@/lib/domain/alerts";
 import { loadIncomeContext } from "@/lib/services/income-context";
 import { Avatar } from "@/components/ui/Avatar";
-import { Card } from "@/components/ui/primitives";
+import { Card, IconBadge } from "@/components/ui/primitives";
 import { MonthYearPicker } from "@/components/MonthYearPicker";
 
 function fmtPct(pct: number): string {
@@ -29,7 +29,10 @@ export default async function TeamReportPage({ searchParams }: { searchParams: P
   return (
     <div className="space-y-4">
       <Card>
-        <h1 className="mb-1 text-lg font-extrabold text-[var(--navy)]">สรุปผลงานทีมตามสายงาน</h1>
+        <h1 className="mb-1 flex items-center text-lg font-extrabold text-[var(--navy)]">
+          <IconBadge icon="🗂️" variant="soft" />
+          สรุปผลงานทีมตามสายงาน
+        </h1>
         <p className="mb-3 text-sm text-[var(--muted)]">ผลรวมของแต่ละหัวหน้าทีมนับรวมทั้งสายใต้สังกัด (ทุกระดับ)</p>
         <MonthYearPicker action="/team-report" year={year} month={month} />
       </Card>

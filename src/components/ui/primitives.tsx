@@ -1,3 +1,5 @@
+import { resolveIcon } from "@/lib/icons";
+
 export function cn(...parts: Array<string | false | null | undefined>) {
   return parts.filter(Boolean).join(" ");
 }
@@ -42,4 +44,29 @@ export function Card({ children, className }: { children: React.ReactNode; class
 export function FormError({ error }: { error?: string }) {
   if (!error) return null;
   return <p role="alert" className="rounded-xl bg-red-50 px-3 py-2 text-sm font-semibold text-red-700">{error}</p>;
+}
+
+const ICON_BADGE_VARIANT = {
+  navy: "bg-gradient-to-br from-[var(--navy)] to-[var(--navy-light)] text-white",
+  orange: "bg-gradient-to-br from-[var(--orange)] to-[var(--orange-cta)] text-white",
+  soft: "bg-[var(--orange-soft)] text-[var(--orange-cta)]",
+  green: "bg-green-50 text-green-600",
+};
+const ICON_BADGE_SIZE = {
+  sm: "size-[26px] rounded-lg text-xs",
+  md: "size-[34px] rounded-[10px] text-base",
+  lg: "size-11 rounded-[13px] text-xl",
+};
+
+// Small colored badge wrapping an icon — the "icon-badge" treatment from the
+// original offline app's redesign, used in front of card/section headings
+// throughout. Resolves to the app's hand-drawn SVG line-icon set when one
+// exists for the given emoji key, falling back to the raw emoji otherwise.
+export function IconBadge({ icon, variant = "soft", size = "md", className }: { icon: string; variant?: keyof typeof ICON_BADGE_VARIANT; size?: keyof typeof ICON_BADGE_SIZE; className?: string }) {
+  const Svg = resolveIcon(icon);
+  return (
+    <span className={cn("mr-1.5 inline-flex shrink-0 items-center justify-center leading-none [&>svg]:size-[1em] [&>svg]:block", ICON_BADGE_VARIANT[variant], ICON_BADGE_SIZE[size], className)}>
+      {Svg ? <Svg /> : icon}
+    </span>
+  );
 }

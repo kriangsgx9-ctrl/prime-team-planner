@@ -6,7 +6,7 @@ import { computeIncome, fmt } from "@/lib/domain/income";
 import { computeAlerts } from "@/lib/domain/alerts";
 import { loadIncomeContext } from "@/lib/services/income-context";
 import { Avatar } from "@/components/ui/Avatar";
-import { Card } from "@/components/ui/primitives";
+import { Card, IconBadge } from "@/components/ui/primitives";
 import { PeriodPicker } from "@/components/PeriodPicker";
 
 const QUICK_LINKS = [
@@ -84,7 +84,10 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       </div>
 
       <Card>
-        <h2 className="mb-1 text-base font-extrabold text-[var(--navy)]">รายได้ประมาณการเดือนนี้</h2>
+        <h2 className="mb-1 flex items-center text-base font-extrabold text-[var(--navy)]">
+          <IconBadge icon="💰" variant="orange" />
+          รายได้ประมาณการเดือนนี้
+        </h2>
         <div className="text-2xl font-extrabold text-[var(--orange-cta)]">฿ {fmt(income.total)}</div>
         <Link href={`/income?memberId=${member.id}&month=${month}&year=${year}`} className="mt-1 inline-block text-xs font-bold text-[var(--navy)] underline">
           ดูรายละเอียด →
@@ -92,11 +95,14 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       </Card>
 
       <Card>
-        <h2 className="mb-3 text-base font-extrabold text-[var(--navy)]">ทางลัด</h2>
+        <h2 className="mb-3 flex items-center text-base font-extrabold text-[var(--navy)]">
+          <IconBadge icon="⚡" variant="navy" />
+          ทางลัด
+        </h2>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
           {QUICK_LINKS.map((l) => (
-            <Link key={l.href} href={`${l.href}?memberId=${member.id}&month=${month}&year=${year}`} className="flex flex-col items-center gap-1 rounded-xl border border-[var(--line)] p-3 text-center hover:bg-[var(--bg)]">
-              <span className="text-xl">{l.icon}</span>
+            <Link key={l.href} href={`${l.href}?memberId=${member.id}&month=${month}&year=${year}`} className="flex flex-col items-center gap-1.5 rounded-xl border border-[var(--line)] p-3 text-center hover:bg-[var(--bg)]">
+              <IconBadge icon={l.icon} variant="soft" size="lg" className="mr-0" />
               <span className="text-xs font-bold">{l.label}</span>
             </Link>
           ))}
@@ -105,7 +111,10 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
 
       {myAlerts.length > 0 && (
         <Card>
-          <h2 className="mb-3 text-base font-extrabold text-[var(--navy)]">ความเสี่ยงของคุณ ({myAlerts.length})</h2>
+          <h2 className="mb-3 flex items-center text-base font-extrabold text-[var(--navy)]">
+            <IconBadge icon="🚨" variant="soft" />
+            ความเสี่ยงของคุณ ({myAlerts.length})
+          </h2>
           <div className="space-y-2">
             {myAlerts.map((a, idx) => (
               <div key={idx} className={`rounded-xl border-l-4 p-3 ${a.severity === "red" ? "border-red-500 bg-red-50" : "border-amber-400 bg-amber-50"}`}>
@@ -121,7 +130,10 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
 
       {reportRows.length > 0 && (
         <Card>
-          <h2 className="mb-3 text-base font-extrabold text-[var(--navy)]">ทีมของฉัน ({reportRows.length} คน)</h2>
+          <h2 className="mb-3 flex items-center text-base font-extrabold text-[var(--navy)]">
+            <IconBadge icon="🧑‍🤝‍🧑" variant="navy" />
+            ทีมของฉัน ({reportRows.length} คน)
+          </h2>
           <div className="space-y-2">
             {reportRows.map(({ member: r, actualNBC: rNbc }) => (
               <Link key={r.id} href={`/dashboard?memberId=${r.id}&month=${month}&year=${year}`} className="flex items-center gap-3 rounded-xl border border-[var(--line)] p-2 hover:bg-[var(--bg)]">

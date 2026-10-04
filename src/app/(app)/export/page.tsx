@@ -1,39 +1,46 @@
 import { requireUser } from "@/lib/auth/session";
-import { Card, PrimeButton } from "@/components/ui/primitives";
-import { MonthYearPicker } from "@/components/MonthYearPicker";
+import { Card, IconBadge } from "@/components/ui/primitives";
+import { ImportGoalsExcel } from "@/components/import/ImportGoalsExcel";
+import { ActualsImportTabs } from "./ActualsImportTabs";
+import { ImportExportTabs } from "./ImportExportTabs";
+import { ExportActions } from "./ExportActions";
 
-export default async function ExportPage({ searchParams }: { searchParams: Promise<{ year?: string; month?: string }> }) {
+export default async function ExportPage() {
   await requireUser();
-  const sp = await searchParams;
-  const now = new Date();
-  const year = sp.year ? parseInt(sp.year) : now.getFullYear();
-  const month = sp.month ? parseInt(sp.month) : now.getMonth() + 1;
+
+  const importSection = (
+    <div className="space-y-4">
+      <Card>
+        <h2 className="mb-1 flex items-center text-base font-extrabold text-[var(--navy)]">
+          <IconBadge icon="✏️" variant="orange" />
+          ผลงาน (Actuals)
+        </h2>
+        <p className="mb-3 text-sm text-[var(--muted)]">นำเข้า FYP / NBC / FYC ของแต่ละคน — เลือกได้ว่าจะใช้ไฟล์ Excel หรือไฟล์ PDF รายงานจากบริษัท</p>
+        <ActualsImportTabs />
+      </Card>
+
+      <Card>
+        <h2 className="mb-1 flex items-center text-base font-extrabold text-[var(--navy)]">
+          <IconBadge icon="🎯" variant="navy" />
+          เป้าหมาย (Goals)
+        </h2>
+        <p className="mb-3 text-sm text-[var(--muted)]">นำเข้าเป้า FYP / NBC / FYC ของแต่ละคนจากไฟล์ Excel — รูปแบบเดียวกับการนำเข้าผลงาน</p>
+        <ImportGoalsExcel />
+      </Card>
+    </div>
+  );
 
   return (
     <div className="space-y-4">
       <Card>
-        <h1 className="mb-1 text-lg font-extrabold text-[var(--navy)]">นำเข้า-ส่งออกข้อมูล</h1>
-        <p className="mb-3 text-sm text-[var(--muted)]">เลือกเดือน/ปีที่ต้องการ แล้วส่งออกเป็นไฟล์</p>
-        <MonthYearPicker action="/export" year={year} month={month} />
+        <h1 className="mb-1 flex items-center text-lg font-extrabold text-[var(--navy)]">
+          <IconBadge icon="📤" variant="orange" />
+          นำเข้า-ส่งออกข้อมูล
+        </h1>
+        <p className="text-sm text-[var(--muted)]">เลือกว่าจะนำเข้าหรือส่งออกข้อมูลด้านล่าง — เดือน/ปีของแต่ละรายการเลือกแยกกันตามจุดที่ใช้งาน</p>
       </Card>
 
-      <Card>
-        <h2 className="mb-1 text-base font-extrabold text-[var(--navy)]">ส่งออกข้อมูลเป็นไฟล์ Excel</h2>
-        <p className="mb-3 text-sm text-[var(--muted)]">จะส่งออกข้อมูลของเดือนที่เลือกสำหรับสมาชิกทุกคน แยกเป็น 3 แท็บ: Performance Report, Goals, Actuals</p>
-        <a href={`/api/export/excel?year=${year}&month=${month}`}>
-          <PrimeButton type="button">📤 ส่งออกไฟล์ Excel (.xlsx)</PrimeButton>
-        </a>
-      </Card>
-
-      <Card>
-        <h2 className="mb-1 text-base font-extrabold text-[var(--navy)]">ส่งออกรายงานเป็น PDF</h2>
-        <p className="mb-3 text-sm text-[var(--muted)]">สรุปผลงานเทียบเป้าหมายและรายได้ประมาณการของทุกคน พร้อมพิมพ์หรือส่งให้ทีม</p>
-        <a href={`/api/export/pdf?year=${year}&month=${month}`}>
-          <PrimeButton type="button" variant="navy">
-            📄 ส่งออกรายงาน PDF
-          </PrimeButton>
-        </a>
-      </Card>
+      <ImportExportTabs importSection={importSection} exportSection={<ExportActions />} />
     </div>
   );
 }

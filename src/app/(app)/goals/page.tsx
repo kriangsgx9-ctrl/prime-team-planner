@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/auth/session";
 import { ROLE_LABEL, rolesOrder } from "@/lib/domain/org";
-import { Card } from "@/components/ui/primitives";
+import { Card, IconBadge } from "@/components/ui/primitives";
 import { PeriodPicker } from "@/components/PeriodPicker";
 import { GoalForm } from "./GoalForm";
 
@@ -30,7 +30,10 @@ export default async function GoalsPage({ searchParams }: { searchParams: Promis
   return (
     <div className="space-y-4">
       <Card>
-        <h1 className="mb-3 text-lg font-extrabold text-[var(--navy)]">กำหนดเป้าหมาย</h1>
+        <h1 className="mb-3 flex items-center text-lg font-extrabold text-[var(--navy)]">
+          <IconBadge icon="🎯" variant="navy" />
+          กำหนดเป้าหมาย
+        </h1>
         <PeriodPicker members={sorted} roleLabel={ROLE_LABEL} memberId={member.id} year={year} month={month} action="/goals" />
       </Card>
       <Card>

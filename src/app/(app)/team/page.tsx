@@ -2,7 +2,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/auth/session";
 import { ROLE_LABEL, rolesOrder } from "@/lib/domain/org";
-import { Card, cn } from "@/components/ui/primitives";
+import { Card, cn, IconBadge } from "@/components/ui/primitives";
 import { AddMemberForm } from "./AddMemberForm";
 import { MemberRow, type MemberData } from "./MemberRow";
 import { OrgChartDiagram } from "./OrgChartDiagram";
@@ -31,7 +31,10 @@ export default async function TeamPage({ searchParams }: { searchParams: Promise
   return (
     <div className="space-y-4">
       <Card>
-        <h1 className="text-lg font-extrabold text-[var(--navy)]">สมาชิกทั้งหมด ({list.length})</h1>
+        <h1 className="flex items-center text-lg font-extrabold text-[var(--navy)]">
+          <IconBadge icon="🧑‍🤝‍🧑" variant="navy" />
+          สมาชิกทั้งหมด ({list.length})
+        </h1>
         <p className="mt-1 text-sm text-[var(--muted)]">จัดการสายงาน ย้ายหัวหน้าสังกัด และออกบัญชีล็อกอินให้ผู้จัดการ</p>
       </Card>
 
@@ -54,7 +57,10 @@ export default async function TeamPage({ searchParams }: { searchParams: Promise
       </div>
 
       <Card>
-        <h2 className="mb-3 text-base font-extrabold text-[var(--navy)]">เพิ่มสมาชิกใหม่</h2>
+        <h2 className="mb-3 flex items-center text-base font-extrabold text-[var(--navy)]">
+          <IconBadge icon="➕" variant="green" />
+          เพิ่มสมาชิกใหม่
+        </h2>
         <AddMemberForm allMembers={list} roleLabel={ROLE_LABEL} />
       </Card>
     </div>

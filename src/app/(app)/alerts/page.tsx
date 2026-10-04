@@ -4,7 +4,7 @@ import { ROLE_LABEL, rolesOrder } from "@/lib/domain/org";
 import { AL_ROLES, descendants, hasActualData } from "@/lib/domain/income";
 import { collectAllAlerts } from "@/lib/domain/alerts";
 import { loadIncomeContext } from "@/lib/services/income-context";
-import { Card } from "@/components/ui/primitives";
+import { Card, IconBadge } from "@/components/ui/primitives";
 import { ScopePicker } from "./ScopePicker";
 
 export default async function AlertsPage({ searchParams }: { searchParams: Promise<{ scope?: string; year?: string; month?: string }> }) {
@@ -38,12 +38,16 @@ export default async function AlertsPage({ searchParams }: { searchParams: Promi
   return (
     <div className="space-y-4">
       <Card>
-        <h1 className="mb-3 text-lg font-extrabold text-[var(--navy)]">การแจ้งเตือนความเสี่ยง</h1>
+        <h1 className="mb-3 flex items-center text-lg font-extrabold text-[var(--navy)]">
+          <IconBadge icon="⚠️" variant="soft" />
+          การแจ้งเตือนความเสี่ยง
+        </h1>
         <ScopePicker leaders={leaders} roleLabel={ROLE_LABEL} scope={scope} year={year} month={month} />
       </Card>
 
       <Card>
-        <h2 className="mb-3 text-base font-extrabold">
+        <h2 className="mb-3 flex items-center text-base font-extrabold">
+          <IconBadge icon="🚨" variant="soft" />
           สรุปความเสี่ยง{scopeLeader ? ` — ทีมของ ${scopeLeader.name}` : "ทั้งหมด"} — {month}/{year + 543}
         </h2>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -65,7 +69,10 @@ export default async function AlertsPage({ searchParams }: { searchParams: Promi
         </Card>
       ) : (
         <Card>
-          <h2 className="mb-3 text-base font-extrabold">รายการแจ้งเตือน ({allAlerts.length})</h2>
+          <h2 className="mb-3 flex items-center text-base font-extrabold">
+            <IconBadge icon="🗂️" variant="soft" />
+            รายการแจ้งเตือน ({allAlerts.length})
+          </h2>
           <div className="space-y-2">
             {sorted.map((a, idx) => {
               const m = membersById.get(a.memberId);

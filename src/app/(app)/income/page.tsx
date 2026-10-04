@@ -3,7 +3,7 @@ import { requireUser } from "@/lib/auth/session";
 import { ROLE_LABEL, rolesOrder } from "@/lib/domain/org";
 import { loadIncomeContext } from "@/lib/services/income-context";
 import { computeIncome, fmt } from "@/lib/domain/income";
-import { Card } from "@/components/ui/primitives";
+import { Card, IconBadge } from "@/components/ui/primitives";
 import { PeriodPicker } from "@/components/PeriodPicker";
 
 export default async function IncomePage({ searchParams }: { searchParams: Promise<{ memberId?: string; year?: string; month?: string }> }) {
@@ -33,12 +33,16 @@ export default async function IncomePage({ searchParams }: { searchParams: Promi
   return (
     <div className="space-y-4">
       <Card>
-        <h1 className="mb-3 text-lg font-extrabold text-[var(--navy)]">ประมาณการรายได้</h1>
+        <h1 className="mb-3 flex items-center text-lg font-extrabold text-[var(--navy)]">
+          <IconBadge icon="💰" variant="orange" />
+          ประมาณการรายได้
+        </h1>
         <PeriodPicker members={sorted} roleLabel={ROLE_LABEL} memberId={member.id} year={year} month={month} action="/income" />
       </Card>
 
       <Card>
-        <h2 className="mb-1 text-base font-extrabold">
+        <h2 className="mb-1 flex items-center text-base font-extrabold">
+          <IconBadge icon="🧮" variant="orange" />
           รายละเอียดรายได้ประมาณการ — {member.name}
         </h2>
         <p className="mb-3 text-xs text-[var(--muted)]">
@@ -62,7 +66,10 @@ export default async function IncomePage({ searchParams }: { searchParams: Promi
 
       {moneyItems.some((i) => i.nextTier?.hasNext) && (
         <Card>
-          <h2 className="mb-1 text-base font-extrabold text-[var(--navy)]">วางแผนขั้นโบนัสถัดไป</h2>
+          <h2 className="mb-1 flex items-center text-base font-extrabold text-[var(--navy)]">
+            <IconBadge icon="🪜" variant="soft" />
+            วางแผนขั้นโบนัสถัดไป
+          </h2>
           <p className="mb-3 text-xs text-[var(--muted)]">อีกเท่าไหร่ถึงจะขยับเทียร์ % ให้สูงขึ้นในแต่ละประเภท</p>
           <div className="space-y-2">
             {moneyItems
