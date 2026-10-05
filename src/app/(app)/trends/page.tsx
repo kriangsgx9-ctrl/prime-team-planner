@@ -80,7 +80,7 @@ export default async function TrendsPage({
 
   return (
     <div className="space-y-4">
-      <Card>
+      <Card bgImage="/images/hero/bar-chart.jpg">
         <h1 className="mb-1 flex items-center text-lg font-extrabold text-[var(--navy)]">
           <IconBadge icon="📊" variant="soft" />
           แนวโน้มผลงาน

@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { PrimeButton, inputClass } from "@/components/ui/primitives";
+import { PrimeButton } from "@/components/ui/primitives";
+import { NumberInput } from "@/components/ui/NumberInput";
 import { previewActualsPdfImport, commitActualsPdfImport, type PdfImportPreview } from "@/app/actions/import";
 
 const MONTHS_TH = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
@@ -51,7 +52,7 @@ export function ImportActualsPdf() {
       <div className="flex flex-wrap items-end gap-3">
         <label className="block space-y-1">
           <span className="block text-xs font-bold text-[var(--muted)]">ปี พ.ศ. (เติมอัตโนมัติถ้าตรวจพบในไฟล์)</span>
-          <input type="number" className={`${inputClass} w-32`} value={yearBE} onChange={(e) => setYearBE(parseInt(e.target.value) || yearBE)} />
+          <NumberInput className="w-32" value={yearBE} onChange={(e) => setYearBE(parseInt(e.target.value) || yearBE)} unit="พ.ศ." />
         </label>
         <label className="cursor-pointer rounded-xl border border-dashed border-[var(--line)] px-4 py-2 text-sm font-bold text-[var(--navy)] hover:bg-[var(--orange-soft)]">
           📁 เลือกไฟล์ PDF รายงานผลงาน (FWD)

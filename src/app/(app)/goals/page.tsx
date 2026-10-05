@@ -29,7 +29,7 @@ export default async function GoalsPage({ searchParams }: { searchParams: Promis
 
   return (
     <div className="space-y-4">
-      <Card>
+      <Card bgImage="/images/hero/target.jpg">
         <h1 className="mb-3 flex items-center text-lg font-extrabold text-[var(--navy)]">
           <IconBadge icon="🎯" variant="navy" />
           กำหนดเป้าหมาย

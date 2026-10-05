@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { resolveIcon } from "@/lib/icons";
 
 export function cn(...parts: Array<string | false | null | undefined>) {
@@ -37,7 +38,18 @@ export function PrimeButton({
   );
 }
 
-export function Card({ children, className }: { children: React.ReactNode; className?: string }) {
+// `bgImage` adds a faint full-bleed photo behind the card's content — used
+// on a handful of page headers (goals, team, alerts, trends) for a touch of
+// the reference brand imagery without competing with the text on top of it.
+export function Card({ children, className, bgImage }: { children: React.ReactNode; className?: string; bgImage?: string }) {
+  if (bgImage) {
+    return (
+      <div className={cn("relative overflow-hidden rounded-2xl border border-[var(--line)] bg-[var(--card)] p-4 shadow-sm", className)}>
+        <Image src={bgImage} alt="" fill className="object-cover opacity-[0.07]" />
+        <div className="relative">{children}</div>
+      </div>
+    );
+  }
   return <div className={cn("rounded-2xl border border-[var(--line)] bg-[var(--card)] p-4 shadow-sm", className)}>{children}</div>;
 }
 

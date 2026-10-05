@@ -32,7 +32,7 @@ export default async function ExportPage() {
 
   return (
     <div className="space-y-4">
-      <Card>
+      <Card bgImage="/images/hero/documents.jpg">
         <h1 className="mb-1 flex items-center text-lg font-extrabold text-[var(--navy)]">
           <IconBadge icon="📤" variant="orange" />
           นำเข้า-ส่งออกข้อมูล

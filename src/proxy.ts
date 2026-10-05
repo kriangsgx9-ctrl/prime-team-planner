@@ -20,5 +20,9 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+  // Static assets (images used on the public login/setup pages, favicons,
+  // and anything Next's image optimizer self-fetches to resize) must never
+  // require a session — excluded by extension rather than by folder name so
+  // this doesn't silently regress the next time a new asset type is added.
+  matcher: ["/((?!_next/static|_next/image|.*\\.(?:ico|png|jpg|jpeg|svg|webp|gif|avif)$).*)"],
 };

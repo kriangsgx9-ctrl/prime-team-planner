@@ -6,6 +6,7 @@ import { rolesOrder } from "@/lib/domain/org";
 import { computeIncome, fmt, getActual, getGoal } from "@/lib/domain/income";
 import { loadIncomeContext } from "@/lib/services/income-context";
 import { NOTO_SANS_THAI_BOLD_BASE64, NOTO_SANS_THAI_REGULAR_BASE64 } from "@/lib/fonts/noto-sans-thai";
+import { PRIME_LOGO_PNG_BASE64 } from "@/lib/assets/prime-logo";
 
 export const runtime = "nodejs";
 
@@ -46,6 +47,7 @@ export async function GET(request: NextRequest) {
     doc.on("error", reject);
   });
 
+  doc.image(Buffer.from(PRIME_LOGO_PNG_BASE64, "base64"), 40, 36, { width: 42, height: 42 });
   doc.font("Thai-Bold").fontSize(18).text("PRIME TEAM — รายงานผลงานทีม", { align: "center" });
   doc.font("Thai").fontSize(11).fillColor("#6B7488").text(`เดือน ${MONTHS_TH[month - 1]} ${year + 543}`, { align: "center" });
   doc.moveDown(1.2);

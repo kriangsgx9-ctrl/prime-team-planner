@@ -5,6 +5,7 @@ import { updateMemberAction, deleteMemberAction, setPhotoAction, grantLoginActio
 import { ORG_ROLES } from "@/lib/domain/org";
 import { Avatar } from "@/components/ui/Avatar";
 import { Field, FormError, inputClass, PrimeButton } from "@/components/ui/primitives";
+import { NumberInput } from "@/components/ui/NumberInput";
 import { resizeImageFile } from "@/lib/avatar";
 import { invalidParentIds, type MemberNode } from "./org-tree-utils";
 
@@ -149,7 +150,7 @@ export function MemberRow({
               </select>
             </Field>
             <Field label="ปีที่บรรจุ (พ.ศ.)">
-              <input name="joinYearBE" type="number" defaultValue={member.joinYear ? member.joinYear + 543 : ""} className={inputClass} />
+              <NumberInput name="joinYearBE" defaultValue={member.joinYear ? member.joinYear + 543 : ""} unit="พ.ศ." />
             </Field>
           </div>
           <Field label="ผู้ชักชวน (สำหรับคำนวณ RA)">

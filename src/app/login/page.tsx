@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { redirect } from "next/navigation";
 import { getSessionMember } from "@/lib/auth/session";
 import { LoginForm } from "./LoginForm";
@@ -11,13 +12,19 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
   if (member) redirect("/dashboard");
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center px-4 py-10">
-      <div className="mb-6 text-center">
-        <div className="mx-auto mb-3 grid size-14 place-items-center rounded-2xl bg-[var(--orange)] text-lg font-extrabold text-white">PT</div>
-        <h1 className="text-xl font-extrabold text-[var(--navy)]">PRIME TEAM</h1>
-        <p className="mt-1 text-sm text-[var(--muted)]">Goal Setting & Income Planner</p>
+    <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4 py-10">
+      <div className="pointer-events-none absolute inset-0 -z-10">
+        <Image src="/images/hero/wave.jpg" alt="" fill priority className="object-cover opacity-[0.08]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-white via-white/95 to-white" />
       </div>
-      <LoginForm notice={reason === "other-device" ? "บัญชีนี้ถูกเข้าใช้งานจากอุปกรณ์อื่น หรือถูกรีเซ็ตโดยแอดมิน — 1 บัญชีใช้ได้ครั้งละ 1 คน" : undefined} />
+      <div className="w-full max-w-md">
+        <div className="mb-6 text-center">
+          <Image src="/images/logo.png" alt="PRIME" width={84} height={84} priority className="mx-auto mb-3 rounded-2xl shadow-lg shadow-[var(--navy)]/20" />
+          <h1 className="text-xl font-extrabold text-[var(--navy)]">PRIME TEAM</h1>
+          <p className="mt-1 text-sm text-[var(--muted)]">Goal Setting & Income Planner</p>
+        </div>
+        <LoginForm notice={reason === "other-device" ? "บัญชีนี้ถูกเข้าใช้งานจากอุปกรณ์อื่น หรือถูกรีเซ็ตโดยแอดมิน — 1 บัญชีใช้ได้ครั้งละ 1 คน" : undefined} />
+      </div>
     </main>
   );
 }

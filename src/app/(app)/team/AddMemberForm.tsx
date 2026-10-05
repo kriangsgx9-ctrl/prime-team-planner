@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import { addMemberAction } from "@/app/actions/team";
 import { ORG_ROLES } from "@/lib/domain/org";
 import { Field, FormError, inputClass, PrimeButton } from "@/components/ui/primitives";
+import { NumberInput } from "@/components/ui/NumberInput";
 import type { MemberNode } from "./org-tree-utils";
 
 export function AddMemberForm({ allMembers, roleLabel }: { allMembers: MemberNode[]; roleLabel: Record<string, string> }) {
@@ -51,7 +52,7 @@ export function AddMemberForm({ allMembers, roleLabel }: { allMembers: MemberNod
           </select>
         </Field>
         <Field label="ปีที่บรรจุ (พ.ศ.)">
-          <input name="joinYearBE" type="number" className={inputClass} />
+          <NumberInput name="joinYearBE" unit="พ.ศ." />
         </Field>
       </div>
       <Field label="ผู้ชักชวน (สำหรับคำนวณ RA — เว้นว่างได้)">

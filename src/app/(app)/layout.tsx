@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { requireUser } from "@/lib/auth/session";
 import { logoutAction } from "@/app/actions/auth";
 import { SidebarProvider } from "@/components/layout/SidebarContext";
@@ -14,7 +15,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           <div className="flex items-center justify-between gap-3 px-4 py-3">
             <div className="flex items-center gap-2.5">
               <SidebarToggleButton />
-              <div className="grid size-8 shrink-0 place-items-center rounded-lg bg-[var(--orange)] text-xs font-extrabold">PT</div>
+              <Image src="/images/logo-192.png" alt="PRIME" width={32} height={32} className="shrink-0 rounded-lg" priority />
               <span className="font-extrabold">PRIME TEAM</span>
             </div>
             <div className="flex items-center gap-3 text-sm">

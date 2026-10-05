@@ -4,6 +4,7 @@ import { useActionState, useState } from "react";
 import { addQualificationAction } from "@/app/actions/qualifications";
 import { QUAL_METRIC_LABEL, QUAL_METRIC_PERIOD, QUAL_SCOPE_LABEL, type QualMetric } from "@/lib/domain/qualifications";
 import { Field, FormError, inputClass, PrimeButton } from "@/components/ui/primitives";
+import { NumberInput } from "@/components/ui/NumberInput";
 
 const TWO_MONTH_METRICS = new Set<QualMetric>(["fyp2mo", "fyc2mo", "nbc2mo"]);
 
@@ -43,7 +44,7 @@ export function AddQualificationForm() {
         </Field>
       </div>
       <Field label={isPct ? "เกณฑ์ขั้นต่ำ (%)" : "เกณฑ์ขั้นต่ำ"}>
-        <input name="threshold" type="number" step="0.01" defaultValue={isPct ? 100 : 50000} className={inputClass} />
+        <NumberInput name="threshold" step="0.01" defaultValue={isPct ? 100 : 50000} unit={isPct ? "%" : undefined} />
       </Field>
       {TWO_MONTH_METRICS.has(metric) && (
         <Field label="เดือนเริ่มรอบ 2 เดือน" hint="เช่น 1 = รอบ ม.ค.-ก.พ., มี.ค.-เม.ย., ...">

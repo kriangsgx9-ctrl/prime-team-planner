@@ -2,7 +2,8 @@
 
 import { useActionState } from "react";
 import { setGoalAction } from "@/app/actions/goals";
-import { Field, FormError, inputClass, PrimeButton } from "@/components/ui/primitives";
+import { Field, FormError, PrimeButton } from "@/components/ui/primitives";
+import { NumberInput } from "@/components/ui/NumberInput";
 
 export function GoalForm({ memberId, year, month, goal }: { memberId: string; year: number; month: number; goal: { targetFYP: number; targetNBC: number; targetFYC: number } | null }) {
   const [state, action, pending] = useActionState(setGoalAction, undefined);
@@ -13,13 +14,13 @@ export function GoalForm({ memberId, year, month, goal }: { memberId: string; ye
       <input type="hidden" name="month" value={month} />
       <div className="grid gap-3 sm:grid-cols-3">
         <Field label="เป้าหมาย FYP (บาท)">
-          <input name="targetFYP" type="number" min={0} step="0.01" defaultValue={goal?.targetFYP ?? 0} className={inputClass} />
+          <NumberInput name="targetFYP" min={0} step="0.01" defaultValue={goal?.targetFYP ?? 0} unit="บาท" />
         </Field>
         <Field label="เป้าหมาย NBC">
-          <input name="targetNBC" type="number" min={0} step="0.01" defaultValue={goal?.targetNBC ?? 0} className={inputClass} />
+          <NumberInput name="targetNBC" min={0} step="0.01" defaultValue={goal?.targetNBC ?? 0} />
         </Field>
         <Field label="เป้าหมาย FYC">
-          <input name="targetFYC" type="number" min={0} step="0.01" defaultValue={goal?.targetFYC ?? 0} className={inputClass} />
+          <NumberInput name="targetFYC" min={0} step="0.01" defaultValue={goal?.targetFYC ?? 0} unit="บาท" />
         </Field>
       </div>
       <FormError error={state?.error} />

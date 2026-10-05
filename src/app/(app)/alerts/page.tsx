@@ -37,7 +37,7 @@ export default async function AlertsPage({ searchParams }: { searchParams: Promi
 
   return (
     <div className="space-y-4">
-      <Card>
+      <Card bgImage="/images/hero/bell.jpg">
         <h1 className="mb-3 flex items-center text-lg font-extrabold text-[var(--navy)]">
           <IconBadge icon="⚠️" variant="soft" />
           การแจ้งเตือนความเสี่ยง

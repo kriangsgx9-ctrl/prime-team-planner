@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { setActualAction } from "@/app/actions/actuals";
 import { Field, FormError, inputClass, PrimeButton } from "@/components/ui/primitives";
+import { NumberInput } from "@/components/ui/NumberInput";
 
 interface ActualData {
   actualFYP: number;
@@ -26,23 +27,23 @@ export function ActualForm({ memberId, year, month, actual, isAgOrAgentRole }: {
       <input type="hidden" name="month" value={month} />
       <div className="grid gap-3 sm:grid-cols-2">
         <Field label="Actual FYP">
-          <input name="actualFYP" type="number" min={0} step="0.01" defaultValue={actual?.actualFYP ?? 0} className={inputClass} />
+          <NumberInput name="actualFYP" min={0} step="0.01" defaultValue={actual?.actualFYP ?? 0} unit="บาท" />
         </Field>
         <Field label="Actual NBC">
-          <input name="actualNBC" type="number" min={0} step="0.01" defaultValue={actual?.actualNBC ?? 0} className={inputClass} />
+          <NumberInput name="actualNBC" min={0} step="0.01" defaultValue={actual?.actualNBC ?? 0} />
         </Field>
       </div>
       <div className="grid gap-3 sm:grid-cols-2">
         <Field label="Actual FYC">
-          <input name="actualFYC" type="number" min={0} step="0.01" defaultValue={actual?.actualFYC ?? 0} className={inputClass} />
+          <NumberInput name="actualFYC" min={0} step="0.01" defaultValue={actual?.actualFYC ?? 0} unit="บาท" />
         </Field>
         <Field label="Actual RYC">
-          <input name="actualRYC" type="number" min={0} step="0.01" defaultValue={actual?.actualRYC ?? 0} className={inputClass} />
+          <NumberInput name="actualRYC" min={0} step="0.01" defaultValue={actual?.actualRYC ?? 0} unit="บาท" />
         </Field>
       </div>
       <div className="grid gap-3 sm:grid-cols-2">
         <Field label="Persistency (%)" hint="13-Month Year Block">
-          <input name="persistency" type="number" min={0} max={100} step="0.1" defaultValue={actual ? actual.persistency * 100 : 0} className={inputClass} />
+          <NumberInput name="persistency" min={0} max={100} step="0.1" defaultValue={actual ? actual.persistency * 100 : 0} unit="%" />
         </Field>
         <Field label="สถานะตัวแทน">
           <select name="agentStatus" defaultValue={actual?.agentStatus ?? "ACTIVE"} className={inputClass}>
@@ -54,20 +55,20 @@ export function ActualForm({ memberId, year, month, actual, isAgOrAgentRole }: {
       </div>
       {isAgOrAgentRole && (
         <Field label="NBC สะสมปีที่ผ่านมา" hint="ใช้คำนวณ Renewal Year Bonus (RYB)">
-          <input name="priorYearNBC" type="number" min={0} step="0.01" defaultValue={actual?.priorYearNBC ?? 0} className={inputClass} />
+          <NumberInput name="priorYearNBC" min={0} step="0.01" defaultValue={actual?.priorYearNBC ?? 0} />
         </Field>
       )}
       {!isAgOrAgentRole && (
         <>
           <Field label="NBC หน่วยตรง (เดือนนี้)" hint="ผลงานส่วนตัว ไม่รวมทีม — ใช้ตรวจสอบเกณฑ์ ODI">
-            <input name="personalUnitNBC" type="number" min={0} step="0.01" defaultValue={actual?.personalUnitNBC ?? 0} className={inputClass} />
+            <NumberInput name="personalUnitNBC" min={0} step="0.01" defaultValue={actual?.personalUnitNBC ?? 0} />
           </Field>
           <div className="grid gap-3 sm:grid-cols-2">
             <Field label="จำนวน AL ใหม่ที่ปั้นขึ้นเดือนนี้">
-              <input name="newALPromotions" type="number" min={0} defaultValue={actual?.newALPromotions ?? 0} className={inputClass} />
+              <NumberInput name="newALPromotions" min={0} defaultValue={actual?.newALPromotions ?? 0} unit="คน" />
             </Field>
             <Field label="จำนวน VP ใหม่ที่ปั้นขึ้นเดือนนี้">
-              <input name="newVPPromotions" type="number" min={0} defaultValue={actual?.newVPPromotions ?? 0} className={inputClass} />
+              <NumberInput name="newVPPromotions" min={0} defaultValue={actual?.newVPPromotions ?? 0} unit="คน" />
             </Field>
           </div>
         </>

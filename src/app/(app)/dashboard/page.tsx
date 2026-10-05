@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/auth/session";
 import { ROLE_LABEL, rolesOrder } from "@/lib/domain/org";
@@ -64,8 +65,10 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
         <PeriodPicker members={sorted} roleLabel={ROLE_LABEL} memberId={member.id} year={year} month={month} action="/dashboard" />
       </Card>
 
-      <div className="rounded-2xl bg-gradient-to-br from-[var(--navy)] via-[var(--navy-light)] to-[var(--orange)] p-5 text-white shadow">
-        <div className="flex items-center gap-3">
+      <div className="relative overflow-hidden rounded-2xl p-5 text-white shadow">
+        <Image src="/images/hero/skyline.jpg" alt="" fill className="object-cover" priority />
+        <div className="absolute inset-0 bg-gradient-to-br from-[var(--navy)]/92 via-[var(--navy-light)]/88 to-[var(--orange)]/80" />
+        <div className="relative flex items-center gap-3">
           <Avatar name={member.name} photo={member.photo} size={64} />
           <div>
             <div className="text-xs font-bold uppercase tracking-wide opacity-80">
